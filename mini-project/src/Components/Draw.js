@@ -18,6 +18,13 @@ const Draw = () => {
     const CANVAS_WIDTH = 800;
     const CANVAS_HIGHT = 600;
 
+    const isFillingRef = useRef(isFilling);
+
+    // isFilling 상태가 바뀔 때마다 Ref 값도 업데이트
+    useEffect(() => {
+        isFillingRef.current = isFilling;
+    }, [isFilling]);
+
     useEffect(() => {
         // 컴포넌트가 마운트 된 후 실행됨
         const canvas = canvasRef.current;
@@ -37,7 +44,8 @@ const Draw = () => {
         let isPainting = false;
 
         function onMove(event) {
-            if (isPainting) {
+            // 상태 대신 Ref를 참조하여 클로저 문제 해결
+            if (isPainting && !isFillingRef.current) {
                 ctxRef.current.lineTo(event.offsetX, event.offsetY);
                 ctxRef.current.stroke();
                 return;
@@ -46,7 +54,7 @@ const Draw = () => {
             ctxRef.current.moveTo(event.offsetX, event.offsetY);
         }
 
-        function startPainting() { isPainting = true; saveHistory(); isPainting = true; }
+        function startPainting() { if (isFillingRef.current) return; saveHistory(); isPainting = true; }
         function cancelPainting() { isPainting = false; }
 
         canvas.addEventListener("mousemove", onMove);
@@ -56,7 +64,7 @@ const Draw = () => {
 
         // Undo 단축키
         const handleKeyDown = (e) => {
-            if (e.ctrlKey && e.Key === 'z')
+            if (e.ctrlKey && e.key === 'z')
                 onUndoClick();
         }
         window.addEventListener("keydown", handleKeyDown);
@@ -67,7 +75,7 @@ const Draw = () => {
             canvas.removeEventListener("mouseup", cancelPainting);
             canvas.removeEventListener("mouseleave", cancelPainting);
         };
-    }, [isFilling, width]); // isFilling이 바뀔 때 리스너가 새 상태 인지
+    }, []); // isFilling이 바뀔 때 리스너가 새 상태 인지
 
 
     // 모드 전환 버튼 클릭 함수 (상태만 반전시킴)
@@ -83,6 +91,7 @@ const Draw = () => {
     };
 
     const onDestroyClick = () => {
+        saveHistory();
         ctxRef.current.fillStyle = "white";
         ctxRef.current.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HIGHT);
     };
@@ -95,7 +104,6 @@ const Draw = () => {
         */
 
         if (ctxRef.current) {
-            saveHistory();
             ctxRef.current.strokeStyle = "white";
         }
 
@@ -182,16 +190,16 @@ const Draw = () => {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+        const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpg"));
 
         try {
             // 브라우저의 파일 저장 창 호출
             if (window.showSaveFilePicker) {
                 const handle = await window.showSaveFilePicker({
-                    suggerstName: 'my-drawsing.png',
+                    suggerstName: 'my-drawsing.jpg',
                     types: [{
-                        decription: 'PNG Image',
-                        accept: { 'image/png': ['.png'] },
+                        decription: 'JPG Image',
+                        accept: { 'image/jpg': ['.jpg'] },
                     }],
                 });
 
@@ -202,10 +210,10 @@ const Draw = () => {
                 alert("✨ 저장되었습니다! ✨")
             } else {
                 // 가상의 링크(<a>)를 생성하여 다운로드 트리거
-                const image = canvas.toDataURL("image/png");
+                const image = canvas.toDataURL("image/jpg");
                 const link = document.createElement("a");
                 link.href = image;
-                link.download = "my-drawing.png"; // 저장될 파일 이름
+                link.download = "my-drawing.jpg"; // 저장될 파일 이름
                 link.click();
             }
         } catch (err) {
