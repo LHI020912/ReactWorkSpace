@@ -54,7 +54,7 @@ src/
  ┃ ┗ undo.png      # 되돌리기 아이콘
  ┣ App.js          # 루트 컴포넌트
  ┗ index.js        # 엔트리 포인트
-
+```
 
 ![image](../mini-project/src/css/tomato.png)
 
