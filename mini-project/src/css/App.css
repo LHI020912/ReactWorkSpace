@@ -40,11 +40,13 @@
 
 .Manual {
   font-family: 'YPairing';
-  background: #fffdf8;
-  border-radius: 10px;
   margin: 30px auto;
-  width: fit-content;
-  border: 1px dashed #3498db;
+  background: #FFFDF9;
+  border: 1px dashed #E8E3DA;
+  border-radius: 18px;
+  padding: 10px;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .show-manual,
@@ -87,11 +89,12 @@
 .Draw-canvas {
   width: 800px;
   height: 600px;
-  margin: 0 auto;
+  margin-bottom: 10px;
   cursor: none;
-  border-radius: 10px;
-  border: 3px solid black;
+  border: 1px solid #E8E3DA;
+  border-radius: 20px;
   background-color: white;
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.15);
 }
 
 .color-options {
@@ -110,16 +113,18 @@
 
 button {
   margin: 10px 10px 0 0;
-  width: 70px;
-  height: 40px;
+  background-color: #FFE4D6;
   border: none;
-  border-radius: 10px;
-  background-color: bisque;
+  border-radius: 20px;
+  padding: 12px 22px;
+  font-weight: 500;
+  color: #2E2E2E;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
   font-family: 'GeekbleMalrangiche';
   cursor: url('./curClick.cur'), auto;
 }
 
 button:hover {
-  font-weight: bold;
-  box-shadow: 3, 3, 2, 2, #cac1b4;
+  transform: translateY(-2px);
 }
